@@ -62,6 +62,27 @@ func createDatabase() {
 	fmt.Println("数据库已打开")
 	//defer db.Close()
 }
+func deleteDataWithKey(key string) {
+	kDatabase.Update(func(tx *bolt.Tx) error {
+		table, err := tx.CreateBucketIfNotExists([]byte(tableName))
+		if err != nil {
+			fmt.Println(err)
+		}
+		table.Delete([]byte(key))
+		return nil
+	})
+}
+
+//删除表
+func deleteTableWithName(tName string) {
+	kDatabase.Update(func(tx *bolt.Tx) error {
+		err := tx.DeleteBucket([]byte(tName))
+		if err != nil {
+			fmt.Println(err)
+		}
+		return nil
+	})
+}
 
 //创建/打开表
 func createTable() {
